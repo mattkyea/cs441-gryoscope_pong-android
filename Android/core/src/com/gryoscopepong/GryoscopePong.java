@@ -11,6 +11,14 @@ public class GryoscopePong extends ApplicationAdapter {
 	Paddle playerOne, AI;
 
 
+	//TODO
+	//trajectory
+	//move ball function
+	//account for hitting paddles and side of screen
+	//hook up gryoscope
+	//basic AI/something that looks smart
+
+
 	public class Paddle {
 		int x, y;
 		ShapeRenderer s;
@@ -76,8 +84,8 @@ public class GryoscopePong extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		playerOne.draw();
 		AI.draw();
-		playerOne.moveUp();
-		AI.moveDown();
+		//playerOne.moveUp();
+		//AI.moveDown();
 		/*
 		s.begin(ShapeRenderer.ShapeType.Filled);
 		s.rect(2000, 400, 50, 250);
