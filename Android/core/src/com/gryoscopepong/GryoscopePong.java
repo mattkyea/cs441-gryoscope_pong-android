@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+
+import java.io.FileInputStream;
 
 public class GryoscopePong extends ApplicationAdapter {
 	Paddle playerOne, AI;
@@ -15,8 +18,9 @@ public class GryoscopePong extends ApplicationAdapter {
 	//trajectory
 	//move ball function
 	//account for hitting paddles and side of screen
-	//hook up gryoscope
 	//basic AI/something that looks smart
+	//then all the screens, popups, buttons
+	//and save/load data
 
 
 	public class Paddle {
@@ -42,6 +46,12 @@ public class GryoscopePong extends ApplicationAdapter {
 
 		public void moveDown(){
 			y-=1;
+		}
+
+		public void moveBy(float val){
+			System.out.println(y);
+			int newPosition = (int) ((y) + ((val/90) * 25));
+			if(newPosition > 0 && newPosition < 800) y = newPosition;
 		}
 
 	}
@@ -76,16 +86,32 @@ public class GryoscopePong extends ApplicationAdapter {
 	public void create () {
 		AI = new Paddle(2000,400);
 		playerOne = new Paddle(50,400);
+
 	}
 
 	@Override
 	public void render () {
+		float pitch = Gdx.input.getPitch();
+		//this gets Z-rotation, which is what I'm looking for
+		//now I just need to
+		//-find range
+		//-use to create a move function
+		//-smooth move, but faster if a more dramatic tilt?
+
+		//it starts at 0, tilting up goes to -90, tilting down goes to 90
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);//black
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		playerOne.draw();
 		AI.draw();
-		//playerOne.moveUp();
-		//AI.moveDown();
+
+		playerOne.moveBy(pitch);
+
+
+		//if(pitch > 0) playerOne.moveUp();
+		//else if(pitch < 0) playerOne.moveDown();
+
+
 		/*
 		s.begin(ShapeRenderer.ShapeType.Filled);
 		s.rect(2000, 400, 50, 250);
