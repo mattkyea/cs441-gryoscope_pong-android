@@ -12,6 +12,7 @@ import java.io.FileInputStream;
 
 public class GryoscopePong extends ApplicationAdapter {
 	Paddle playerOne, AI;
+	Ball ball;
 
 
 	//TODO
@@ -49,28 +50,60 @@ public class GryoscopePong extends ApplicationAdapter {
 		}
 
 		public void moveBy(float val){
-			System.out.println(y);
+			//System.out.println(y);
 			int newPosition = (int) ((y) + ((val/90) * 25));
 			if(newPosition > 0 && newPosition < 800) y = newPosition;
+		}
+
+		public int[] getLocation(){
+			int[] ret = {this.x, this.y, this.x + 50, this.y + 250};
+			return ret;
 		}
 
 	}
 
 	public class Ball {
 		int x, y;
+		int dy, dx;
 		ShapeRenderer s;
 
 		Ball(int x, int y){
 			this.x = x;
 			this.y = y;
+			this.dx = this.dy = 0;
 			s = new ShapeRenderer();
 			s.setColor(1,1,1,1);//white
 		}
 
 		public void draw(){
 			s.begin(ShapeRenderer.ShapeType.Filled);
-			s.circle(x, y, 50);
+			s.rect(x, y, 50, 50);
 			s.end();
+
+			if(collision()){
+				System.out.println("\n\n\n\nCOLLIDE\n\n\n\n");
+				setDx(this.dx * -1);
+			}
+				x += dx;
+				y += dy;
+
+		}
+
+		public boolean collision(){
+			int[] p1, p2;
+			p1 = playerOne.getLocation();
+			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
+			//System.out.println("paddle - X: " + p1[0] + " Y: " + p1[1] + " range: " + p1[3]);
+			if(this.x <= p1[0] && this.y >= p1[1] && this.y <= p1[3]) return true;
+
+			p2 = AI.getLocation();
+			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
+			//System.out.println("paddle - X: " + p1[0] + " Y: " + p1[1] + " range: " + p1[3]);
+			if(this.x >= p2[0] && this.y >= p2[1] && this.y <= p2[3]) return true;
+
+
+			return false;
+
 		}
 
 		public void moveUp(){
@@ -80,12 +113,27 @@ public class GryoscopePong extends ApplicationAdapter {
 		public void moveDown(){
 			y-=1;
 		}
+
+		public void move(int val){
+			int newPositionY = y+ val;
+			if(newPositionY > 0 && newPositionY < 800) y = newPositionY;
+		}
+
+		public void setDy(int dy) {
+			this.dy = dy;
+		}
+
+		public void setDx(int dx) {
+			this.dx = dx;
+		}
 	}
 	
 	@Override
 	public void create () {
 		AI = new Paddle(2000,400);
 		playerOne = new Paddle(50,400);
+		ball = new Ball(1000,500);
+		ball.setDx(-10);
 
 	}
 
@@ -104,6 +152,7 @@ public class GryoscopePong extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		playerOne.draw();
 		AI.draw();
+		ball.draw();
 
 		playerOne.moveBy(pitch);
 
