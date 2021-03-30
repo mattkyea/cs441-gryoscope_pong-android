@@ -78,6 +78,28 @@ public class GyroscopePong extends ApplicationAdapter {
 			y = originalY;
 		}
 
+		public void prepareForVolley(){
+
+			//this works for very small values of DY
+			//i.e. values that don't send the ball off screen
+			//so that's the real challenge - how to compute on a smaller basis (i.e. I can't do the whole *190 at once), so I can check if we go off screen
+			//loop in worst case scenario -
+			//start at 2, go to 190
+			//at each "toY" and "toX" see if would trigger hit screen
+			//if so, update values here as part of prediction
+
+			int toY, toX;
+			toY = ball.y + (ball.dy * 190);
+			toX = ball.x + (-ball.dx * 190);
+			System.out.println("predicted X: " + toX + " predicted Y: " + toY);
+
+			//this jumps the paddle there
+			//will add code to gradually move toward points instead
+			//this.x = toX;//we shouldn't change this - can only move up/down
+			this.y = toY - 100;//offset paddle size, try to hit in middle
+			//how to deal with hitting floor and ceiling?
+		}
+
 	}
 
 	public class Ball {
@@ -90,9 +112,11 @@ public class GyroscopePong extends ApplicationAdapter {
 			this.x = x;
 			this.y = y;
 			this.dx = -10;
-			this.dy = 20;
+			this.dy = 1;
+			//this.dy = 0;
 			originalDX = -10;
-			originalDY = 20;
+			originalDY = 1;
+			//originalDY = 0;
 			originalX = x;
 			originalY = y;
 			s = new ShapeRenderer();
@@ -114,14 +138,14 @@ public class GyroscopePong extends ApplicationAdapter {
 			}
 
 			if(aiScores()){
-				System.out.println("GOAL");
+				//System.out.println("GOAL");
 				reset();
 				playerOne.reset();
 				AI.reset();
 			}
 
 			if(playerScores()){
-				System.out.println("GOAL");
+				//System.out.println("GOAL");
 				reset();
 				playerOne.reset();
 				AI.reset();
@@ -150,7 +174,10 @@ public class GyroscopePong extends ApplicationAdapter {
 			p1 = playerOne.getLocation();
 			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
 			//System.out.println("paddle - X: " + p1[0] + " range: "+ p1[2]+ " Y: " + p1[1] + " range: " + p1[3]);
-			if(this.x >= p1[0] && this.x <= p1[2] && this.y >= p1[1] && this.y <= p1[3]) return true;
+			if(this.x >= p1[0] && this.x <= p1[2] && this.y >= p1[1] && this.y <= p1[3]){//player hits, tell AI to get ready for response
+				AI.prepareForVolley();
+				return true;
+			}
 
 			p2 = AI.getLocation();
 			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
@@ -221,7 +248,7 @@ public class GyroscopePong extends ApplicationAdapter {
 		AI.draw();
 		ball.draw();
 		batch.begin();
-		font.draw(batch, "Hello World!", 10, 10);
+		//font.draw(batch, "Hello World!", 10, 10);
 		batch.end();
 		playerOne.moveBy(pitch);
 
