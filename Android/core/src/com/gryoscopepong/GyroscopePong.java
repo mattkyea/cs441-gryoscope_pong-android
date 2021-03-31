@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.MathUtils;
 
 import java.io.FileInputStream;
 
+import javax.crypto.spec.PSource;
+
 public class GyroscopePong extends ApplicationAdapter {
 	Paddle playerOne, AI;
 	Ball ball;
@@ -21,10 +23,6 @@ public class GyroscopePong extends ApplicationAdapter {
 
 
 	//TODO
-	//trajectory
-	//move ball function
-	//account for hitting paddles and side of screen
-	//basic AI/something that looks smart
 	//scores on top of screens
 	//then all the screens, popups, buttons
 	//and save/load data
@@ -48,7 +46,7 @@ public class GyroscopePong extends ApplicationAdapter {
 			this.y = y;
 			this.originalX = x;
 			this.originalY = y;
-			this.speed = 2;
+			this.speed = 1;
 			s = new ShapeRenderer();
 			s.setColor(1,1,1,1);//white
 		}
@@ -63,7 +61,7 @@ public class GyroscopePong extends ApplicationAdapter {
 		public void moveTowards(){
 			if(moving){
 				this.y = this.y + this.dy;
-				System.out.println((this.y + 125) + " >= " + moveTo + " >= " + (this.y - 125));
+				//System.out.println((this.y + 125) + " >= " + moveTo + " >= " + (this.y - 125));
 				if(this.y + 75 >= moveTo && this.y - 75 <= moveTo) moving = false;
 			}
 		}
@@ -120,7 +118,7 @@ public class GyroscopePong extends ApplicationAdapter {
 
 			//toY = ball.y + (ball.dy * 190);
 			//toX = ball.x + (-ball.dx * 190);
-			System.out.println("predicted X: " + toX + " predicted Y: " + toY);
+			//System.out.println("predicted X: " + toX + " predicted Y: " + toY);
 
 			//this jumps the paddle there
 			//will add code to gradually move toward points instead
@@ -151,10 +149,10 @@ public class GyroscopePong extends ApplicationAdapter {
 			this.x = x;
 			this.y = y;
 			this.dx = -10;
-			this.dy = 1;
+			this.dy = 0;
 			//this.dy = 0;
 			originalDX = -10;
-			originalDY = 1;
+			originalDY = 0;
 			//originalDY = 0;
 			originalX = x;
 			originalY = y;
@@ -208,12 +206,36 @@ public class GyroscopePong extends ApplicationAdapter {
 			return false;
 		}
 
+		public void calculateNewDY(float midpointOfPaddle){
+			int sign = 1;
+			float distanceFromCenter = 0;//use abs
+			if(this.y > midpointOfPaddle){
+				System.out.println(this.y + " > " + midpointOfPaddle);
+				sign = 1;
+				distanceFromCenter = this.y - midpointOfPaddle;
+			}
+			else if (this.y < midpointOfPaddle){
+				System.out.println(this.y + " < " + midpointOfPaddle);
+				sign = -1;
+				distanceFromCenter = midpointOfPaddle - this.y;
+			}
+			else if(this.y == midpointOfPaddle){
+				System.out.println(this.y + " = " + midpointOfPaddle);
+				dy= 0;
+				return;
+			}
+
+			this.dy = (int) (sign * ((distanceFromCenter/125) * 25));
+			System.out.println(((distanceFromCenter/125) * 10) + ", so set dy to " + this.dy);
+		}
+
 		public boolean collision(){
 			int[] p1, p2;
 			p1 = playerOne.getLocation();
 			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
 			//System.out.println("paddle - X: " + p1[0] + " range: "+ p1[2]+ " Y: " + p1[1] + " range: " + p1[3]);
 			if(this.x >= p1[0] && this.x <= p1[2] && this.y >= p1[1] && this.y <= p1[3]){//player hits, tell AI to get ready for response
+				ball.calculateNewDY(p1[1] + 125);
 				AI.prepareForVolley();
 				return true;
 			}
@@ -221,7 +243,10 @@ public class GyroscopePong extends ApplicationAdapter {
 			p2 = AI.getLocation();
 			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
 			//System.out.println("paddle - X: " + p2[0] + " range: "+ p2[2]+ " Y: " + p2[1] + " range: " + p2[3]);
-			if(this.x <= p2[2] && this.x >= p2[0] && this.y >= p2[1] && this.y <= p2[3]) return true;
+			if(this.x <= p2[2] && this.x >= p2[0] && this.y >= p2[1] && this.y <= p2[3]){
+				ball.calculateNewDY(p2[1] + 125);
+				return true;
+			}
 
 
 			return false;
