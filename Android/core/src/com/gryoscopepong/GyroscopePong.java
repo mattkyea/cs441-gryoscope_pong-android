@@ -2,6 +2,7 @@ package com.gryoscopepong;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,16 +18,32 @@ import java.io.FileInputStream;
 
 import javax.crypto.spec.PSource;
 
-public class GyroscopePong extends ApplicationAdapter {
+public class GyroscopePong implements Screen {
 	Paddle playerOne, AI;
 	Ball ball;
 	BitmapFont playerScore, AIScore;
 	SpriteBatch batch;
 
+	private MainScreen mainScreen;
+
+	public GyroscopePong(MainScreen ms){
+		mainScreen = ms;
+		System.out.println("oh hello");
+
+		create();
+/*
+		while(true){
+			render(0);
+			show();
+		}
+
+		 */
+	}
 
 	//TODO
 	//scores on top of screens
 	//line divider down the middle?
+	//sound effect?
 	//then all the screens, popups, buttons
 	//should have AI vs AI in background on home screen
 	//and save/load data
@@ -208,7 +225,11 @@ public class GyroscopePong extends ApplicationAdapter {
 			//System.out.println(this.x + " VS " + p1[0]);
 			if(this.x < p1[0]) {
 				AI.score+=1;
-				if(AI.score == 3) System.out.println("game over");
+				if(AI.score == 3){
+					System.out.println("game over");
+					dispose();
+					mainScreen.setLeaderboardScreen();
+				}
 				return true;
 			}
 			return false;
@@ -307,7 +328,7 @@ public class GyroscopePong extends ApplicationAdapter {
 
 	}
 	
-	@Override
+	//@Override
 	public void create () {
 		AI = new Paddle(2000,400);
 		playerOne = new Paddle(50,400);
@@ -322,7 +343,7 @@ public class GyroscopePong extends ApplicationAdapter {
 		AIScore.setColor(Color.WHITE);
 	}
 
-	@Override
+	//@Override
 	public void render () {
 		float pitch = Gdx.input.getPitch();
 		//this gets Z-rotation
@@ -354,11 +375,44 @@ public class GyroscopePong extends ApplicationAdapter {
 
 		 */
 	}
-	
+
+
+	@Override
+	public void show() {
+	}
+
+	@Override
+	public void render(float delta) {
+		render();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+
+	}
+
+	@Override
+	public void pause() {
+
+	}
+
+	@Override
+	public void resume() {
+
+	}
+
+	@Override
+	public void hide() {
+
+	}
+
 	@Override
 	public void dispose () {
 		playerOne.s.dispose();
 		AI.s.dispose();
 		ball.s.dispose();
+		batch.dispose();
+		playerScore.dispose();
+		AIScore.dispose();
 	}
 }

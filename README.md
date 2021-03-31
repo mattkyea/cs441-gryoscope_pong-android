@@ -21,3 +21,14 @@ https://stackoverflow.com/questions/17938326/keep-android-application-landscape-
 
 ###### Custom fonts
 https://www.dafont.com/theme.php?cat=302
+
+###### Where to put fonts
+https://leetdev.io/libgdx/using-true-fonts-for-your-libgdx-project
+
+###### How to convert between font types
+https://stackoverflow.com/questions/24529369/how-to-convert-ttf-to-fnt-with-fontforge
+
+###### Basics of adding multiple screens in libGDX (2 examples)
+https://stackoverflow.com/questions/23637052/libgdx-multiple-screens
+
+https://libgdx.com/dev/simple-game-extended/
