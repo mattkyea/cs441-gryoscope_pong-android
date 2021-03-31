@@ -37,6 +37,10 @@ public class GyroscopePong extends ApplicationAdapter {
 	public class Paddle {
 		int x, y;
 		int originalX, originalY;
+		int speed;
+		int dy;
+		int moveTo = 0;
+		boolean moving = false;
 		ShapeRenderer s;
 
 		Paddle(int x, int y){
@@ -44,14 +48,24 @@ public class GyroscopePong extends ApplicationAdapter {
 			this.y = y;
 			this.originalX = x;
 			this.originalY = y;
+			this.speed = 2;
 			s = new ShapeRenderer();
 			s.setColor(1,1,1,1);//white
 		}
 
 		public void draw(){
 			s.begin(ShapeRenderer.ShapeType.Filled);
+			moveTowards();
 			s.rect(x, y, 50, 250);
 			s.end();
+		}
+
+		public void moveTowards(){
+			if(moving){
+				this.y = this.y + this.dy;
+				System.out.println((this.y + 125) + " >= " + moveTo + " >= " + (this.y - 125));
+				if(this.y + 75 >= moveTo && this.y - 75 <= moveTo) moving = false;
+			}
 		}
 
 		public void moveUp(){
@@ -88,15 +102,40 @@ public class GyroscopePong extends ApplicationAdapter {
 			//at each "toY" and "toX" see if would trigger hit screen
 			//if so, update values here as part of prediction
 
+			if(moving) moving = false;
+
 			int toY, toX;
-			toY = ball.y + (ball.dy * 190);
-			toX = ball.x + (-ball.dx * 190);
+			int ballDXCopy = -ball.dx;
+			int ballDYCopy = ball.dy;
+			toY = ball.y;
+			toX = ball.x;
+
+
+			for(int i =1; i<191; i++){
+				toY = toY + (ballDYCopy * 1);
+				toX = toX + (ballDXCopy * 1);
+				if(toY <= 0 || toY >= 1050) ballDYCopy*=-1;
+			}
+
+
+			//toY = ball.y + (ball.dy * 190);
+			//toX = ball.x + (-ball.dx * 190);
 			System.out.println("predicted X: " + toX + " predicted Y: " + toY);
 
 			//this jumps the paddle there
 			//will add code to gradually move toward points instead
 			//this.x = toX;//we shouldn't change this - can only move up/down
-			this.y = toY - 100;//offset paddle size, try to hit in middle
+			//this.y = toY - 100;//offset paddle size, try to hit in middle
+
+
+
+			this.moveTo = toY - 100;
+			this.moving = true;
+			if(this.moveTo > this.y) this.dy = this.speed * 1;
+			if(this.moveTo < this.y) this.dy = this.speed * -1;
+			//this.speed++;
+
+
 			//how to deal with hitting floor and ceiling?
 		}
 
