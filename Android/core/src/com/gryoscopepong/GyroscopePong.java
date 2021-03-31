@@ -2,6 +2,7 @@ package com.gryoscopepong;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Align;
 
 import java.io.FileInputStream;
 
@@ -18,13 +20,15 @@ import javax.crypto.spec.PSource;
 public class GyroscopePong extends ApplicationAdapter {
 	Paddle playerOne, AI;
 	Ball ball;
-	BitmapFont font;
-	Batch batch;
+	BitmapFont playerScore, AIScore;
+	SpriteBatch batch;
 
 
 	//TODO
 	//scores on top of screens
+	//line divider down the middle?
 	//then all the screens, popups, buttons
+	//should have AI vs AI in background on home screen
 	//and save/load data
 
 	public class T extends SpriteBatch{
@@ -40,6 +44,7 @@ public class GyroscopePong extends ApplicationAdapter {
 		int moveTo = 0;
 		boolean moving = false;
 		ShapeRenderer s;
+		int score;
 
 		Paddle(int x, int y){
 			this.x = x;
@@ -47,8 +52,13 @@ public class GyroscopePong extends ApplicationAdapter {
 			this.originalX = x;
 			this.originalY = y;
 			this.speed = 1;
+			this.score = 0;
 			s = new ShapeRenderer();
 			s.setColor(1,1,1,1);//white
+		}
+
+		public String getScore(){
+			return Integer.toString(this.score);
 		}
 
 		public void draw(){
@@ -196,13 +206,20 @@ public class GyroscopePong extends ApplicationAdapter {
 		private boolean aiScores() {
 			int[] p1 = playerOne.getLocation();
 			//System.out.println(this.x + " VS " + p1[0]);
-			if(this.x < p1[0]) return true;
+			if(this.x < p1[0]) {
+				AI.score+=1;
+				if(AI.score == 3) System.out.println("game over");
+				return true;
+			}
 			return false;
 		}
 
 		private boolean playerScores() {
 			int[] p2 = AI.getLocation();
-			if(this.x > p2[2]) return true;
+			if(this.x+50 > p2[2]){
+				playerOne.score+=1;
+				return true;
+			}
 			return false;
 		}
 
@@ -232,10 +249,12 @@ public class GyroscopePong extends ApplicationAdapter {
 		public boolean collision(){
 			int[] p1, p2;
 			p1 = playerOne.getLocation();
+			//int topRight = this.x - 10 ;
+			//int topLeft = this.x + 10;
 			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
 			//System.out.println("paddle - X: " + p1[0] + " range: "+ p1[2]+ " Y: " + p1[1] + " range: " + p1[3]);
 			if(this.x >= p1[0] && this.x <= p1[2] && this.y >= p1[1] && this.y <= p1[3]){//player hits, tell AI to get ready for response
-				ball.calculateNewDY(p1[1] + 125);
+				ball.calculateNewDY(p1[1] + 100);
 				AI.prepareForVolley();
 				return true;
 			}
@@ -243,8 +262,8 @@ public class GyroscopePong extends ApplicationAdapter {
 			p2 = AI.getLocation();
 			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
 			//System.out.println("paddle - X: " + p2[0] + " range: "+ p2[2]+ " Y: " + p2[1] + " range: " + p2[3]);
-			if(this.x <= p2[2] && this.x >= p2[0] && this.y >= p2[1] && this.y <= p2[3]){
-				ball.calculateNewDY(p2[1] + 125);
+			if(this.x+50 <= p2[2] && this.x+50 >= p2[0] && this.y >= p2[1] && this.y <= p2[3]){
+				ball.calculateNewDY(p2[1] + 100);
 				return true;
 			}
 
@@ -293,10 +312,14 @@ public class GyroscopePong extends ApplicationAdapter {
 		AI = new Paddle(2000,400);
 		playerOne = new Paddle(50,400);
 		ball = new Ball(1000,500);
-		ball.setDx(-10);
+		//ball.setDx(-10);
 		batch = new SpriteBatch();
-		font = new BitmapFont();
-
+		playerScore = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
+		playerScore.getData().setScale(-5, 5);//negative  to mirror/flip
+		playerScore.setColor(Color.WHITE);
+		AIScore = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
+		AIScore.getData().setScale(-5, 5);//negative  to mirror/flip
+		AIScore.setColor(Color.WHITE);
 	}
 
 	@Override
@@ -312,7 +335,8 @@ public class GyroscopePong extends ApplicationAdapter {
 		AI.draw();
 		ball.draw();
 		batch.begin();
-		//font.draw(batch, "Hello World!", 10, 10);
+		playerScore.draw(batch, playerOne.getScore(), 600, 175);
+		AIScore.draw(batch, AI.getScore(), 1600, 175);
 		batch.end();
 		playerOne.moveBy(pitch);
 
