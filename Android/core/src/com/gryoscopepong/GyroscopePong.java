@@ -228,7 +228,7 @@ public class GyroscopePong implements Screen {
 				if(AI.score == 3){
 					System.out.println("game over");
 					dispose();
-					mainScreen.setLeaderboardScreen();
+					mainScreen.setLeaderboardScreen(playerOne.score);
 				}
 				return true;
 			}

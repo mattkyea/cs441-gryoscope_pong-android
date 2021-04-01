@@ -2,6 +2,8 @@ package com.gryoscopepong;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 import javax.naming.Context;
 
@@ -11,17 +13,15 @@ public class MainScreen extends Game implements ApplicationListener {
     private LeaderboardScreen leaderboardScreen;
     private Context c;
 
-    public MainScreen(Context context) {
-        c = context;
-    }
+
 
     void setGyroscopePong(){
         game = new GyroscopePong(this);
         setScreen(game);
     }
 
-    void setLeaderboardScreen(){
-        leaderboardScreen = new LeaderboardScreen(this);
+    void setLeaderboardScreen(int score){
+        leaderboardScreen = new LeaderboardScreen(this, score);
         setScreen(leaderboardScreen);
     }
 
