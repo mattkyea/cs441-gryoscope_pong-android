@@ -21,36 +21,6 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new MainScreen());
-
-		//read file
-		try {
-			FileInputStream input = getApplicationContext().openFileInput("save_data.txt");
-			InputStreamReader inputStreamReader = new InputStreamReader(input, Charset.forName("UTF-8"));//byte by byte
-			BufferedReader reader = new BufferedReader(inputStreamReader);//just for ease of use
-			String line = reader.readLine();
-
-			while(line != null){
-				System.out.println(line);
-				line = reader.readLine();
-			}
-
-			input.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		//save file
-		try{
-			FileOutputStream outputStream = getApplicationContext().openFileOutput("save_data.txt", Context.MODE_APPEND);
-			outputStream.write("test data to write\n".getBytes(Charset.forName("UTF-8")));
-			System.out.println("wrote data");
-			outputStream.close();
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-
-
-
+		initialize(new MainClass());
 	}
 }

@@ -1,9 +1,7 @@
 package com.gryoscopepong;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -15,30 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.naming.Context;
+public class MainScreen implements Screen {
 
-public class MainScreen extends Game implements ApplicationListener {
+    private MainClass mainClass;
 
-    private GyroscopePong game;
-    private LeaderboardScreen leaderboardScreen;
     private Stage stage;//what we interact with on screen
     private BitmapFont font;
     private SpriteBatch batch;
 
-
-
-    void setGyroscopePong(){
-        game = new GyroscopePong(this);
-        setScreen(game);
-    }
-
-    void setLeaderboardScreen(int score){
-        leaderboardScreen = new LeaderboardScreen(this, score);
-        setScreen(leaderboardScreen);
-    }
-
-    @Override
-    public void create() {
+    public MainScreen(MainClass mc) {
+        System.out.println("in main screen");
+        mainClass = mc;
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -59,7 +44,7 @@ public class MainScreen extends Game implements ApplicationListener {
         playButton.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                setGyroscopePong();
+                mainClass.setGyroscopePong();
                 return true;
             }
         });
@@ -75,8 +60,8 @@ public class MainScreen extends Game implements ApplicationListener {
         instructionsButton.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                //setGyroscopePong();
-                System.out.println("open rules");
+                stage.clear();
+                mainClass.setRulesScreen(stage);
                 return true;
             }
         });
@@ -89,25 +74,31 @@ public class MainScreen extends Game implements ApplicationListener {
 
         stage.addActor(playButton);
         stage.addActor(instructionsButton);
+        //render(1);
 
+    }
+
+
+    @Override
+    public void show() {
 
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
-
-    @Override
-    public void render() {
+    public void render(float delta) {
+        //System.out.println("render");
         Gdx.gl.glClearColor(0, 0, 0, 1);//black
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
         batch.begin();
-        font.draw(batch, "Gyroscope Pong", (Gdx.graphics.getWidth()/2) + 750, (Gdx.graphics.getHeight()/2) -350);
+        font.draw(batch, "Gyroscope Pong", (Gdx.graphics.getWidth()/2) + 700, (Gdx.graphics.getHeight()/2) -350);
         batch.end();
-        super.render();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
     }
 
     @Override
@@ -117,6 +108,11 @@ public class MainScreen extends Game implements ApplicationListener {
 
     @Override
     public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
 
     }
 

@@ -24,9 +24,9 @@ public class GyroscopePong implements Screen {
 	BitmapFont playerScore, AIScore;
 	SpriteBatch batch;
 
-	private MainScreen mainScreen;
+	private MainClass mainScreen;
 
-	public GyroscopePong(MainScreen ms){
+	public GyroscopePong(MainClass ms){
 		mainScreen = ms;
 		System.out.println("oh hello");
 
@@ -40,13 +40,6 @@ public class GyroscopePong implements Screen {
 		 */
 	}
 
-	//TODO
-	//scores on top of screens
-	//line divider down the middle?
-	//sound effect?
-	//then all the screens, popups, buttons
-	//should have AI vs AI in background on home screen
-	//and save/load data
 
 	public class T extends SpriteBatch{
 

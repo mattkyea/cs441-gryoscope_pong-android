@@ -2,6 +2,16 @@
 
 This is an Android app that is a twist on the classic game, Pong. The user moves their paddle by turning their phone.
 
+## to do
+- allow user to enter initials
+- line divider down the middle?
+- sound effect?
+- AI vs AI on main screen?
+- use getWidth and getHeight in game and end screen
+- bug test game
+- clean game code
+- possibly reuse fonts and buttons via MainClass
+
 # Sources
 
 ###### How to get rotation:
@@ -35,3 +45,6 @@ https://libgdx.com/dev/simple-game-extended/
 
 ###### How to read and write files in libGDX
 https://stackoverflow.com/questions/37283273/libgdx-filehandle-reading-and-writing-more-than-one-line
+
+###### How to center things in libGDX
+https://stackoverflow.com/questions/12449229/centering-a-texture-libgdx

@@ -19,7 +19,7 @@ import java.util.Comparator;
 
 public class LeaderboardScreen implements Screen {
 
-    private MainScreen mainScreen;
+    private MainClass mainScreen;
     private BitmapFont font;
     private BitmapFont scoreFont;
     private SpriteBatch batch;
@@ -44,7 +44,7 @@ public class LeaderboardScreen implements Screen {
     }
 
 
-    public LeaderboardScreen(MainScreen ms, int score){
+    public LeaderboardScreen(MainClass ms, int score){
         mainScreen = ms;
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
