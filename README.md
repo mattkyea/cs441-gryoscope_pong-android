@@ -32,3 +32,6 @@ https://stackoverflow.com/questions/24529369/how-to-convert-ttf-to-fnt-with-font
 https://stackoverflow.com/questions/23637052/libgdx-multiple-screens
 
 https://libgdx.com/dev/simple-game-extended/
+
+###### How to read and write files in libGDX
+https://stackoverflow.com/questions/37283273/libgdx-filehandle-reading-and-writing-more-than-one-line

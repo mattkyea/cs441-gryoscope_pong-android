@@ -39,7 +39,7 @@ public class LeaderboardScreen implements Screen {
 
         @Override
         public String toString() {
-            return initials + " ******************************** " + value;
+            return initials + " " + value;
         }
     }
 
@@ -96,7 +96,7 @@ public class LeaderboardScreen implements Screen {
         batch.begin();
         font.draw(batch, "game over", 1500, 250);
         int currY = 500;
-        for(int i=0; i < 7; i++){
+        for(int i=0; i < 6; i++){
             scoreFont.draw(batch, scoresToPrint.get(i).toString(), 1250, currY);
             currY+=100;
         }
