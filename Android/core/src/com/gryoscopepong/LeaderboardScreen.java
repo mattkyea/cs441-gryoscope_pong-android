@@ -87,7 +87,8 @@ public class LeaderboardScreen implements Screen {
         });
 
         //System.out.println(entries);
-
+        if(scoresToPrint.size() >= 6) entries = 6;
+        else entries = scoresToPrint.size();
     }
 
 
@@ -101,10 +102,10 @@ public class LeaderboardScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);//black
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        font.draw(batch, "game over", 1500, 250);
-        int currY = 500;
-        for(int i=0; i < 6; i++){
-            scoreFont.draw(batch, scoresToPrint.get(i).toString(), 1250, currY);
+        font.draw(batch, "game over", (Gdx.graphics.getWidth()/2) + 500,(Gdx.graphics.getHeight()/2) - 400);
+        int currY = (Gdx.graphics.getHeight()/2) - 150;
+        for(int i=0; i < entries; i++){
+            scoreFont.draw(batch, scoresToPrint.get(i).toString(), (Gdx.graphics.getWidth()/2)+150, currY);
             currY+=100;
         }
         batch.end();

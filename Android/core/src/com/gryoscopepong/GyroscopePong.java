@@ -100,7 +100,7 @@ public class GyroscopePong implements Screen {
 		public void moveBy(float val){
 			//System.out.println(y);
 			int newPosition = (int) ((y) + ((val/90) * 25));
-			if(newPosition > 0 && newPosition < 800) y = newPosition;
+			if(newPosition > 0 && newPosition < (Gdx.graphics.getHeight()) - 250) y = newPosition;
 		}
 
 		public int[] getLocation(){
@@ -132,10 +132,11 @@ public class GyroscopePong implements Screen {
 			toX = ball.x;
 
 
-			for(int i =1; i<191; i++){
+			// this needs to be updated, not 191 but we check for we're at correct X range
+			while(toX < Gdx.graphics.getWidth() - 50){
 				toY = toY + (ballDYCopy * 1);
 				toX = toX + (ballDXCopy * 1);
-				if(toY <= 0 || toY >= 1050) ballDYCopy*=-1;
+				if(toY <= 0 || toY >= Gdx.graphics.getHeight()) ballDYCopy*=-1;
 			}
 
 
@@ -291,7 +292,7 @@ public class GyroscopePong implements Screen {
 		}
 
 		public boolean hitScreen(){
-			if(this.y <= 0 || this.y >= 1050) return true;
+			if(this.y <= 0 || this.y >= Gdx.graphics.getHeight()) return true;
 			return false;
 		}
 
@@ -327,9 +328,10 @@ public class GyroscopePong implements Screen {
 	
 	//@Override
 	public void create () {
-		AI = new Paddle(2000,400);
-		playerOne = new Paddle(50,400);
-		ball = new Ball(1000,500);
+		//AI = new Paddle(2000,400);
+		AI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125);
+		playerOne = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125);
+		ball = new Ball((Gdx.graphics.getWidth()/2)  - 25,(Gdx.graphics.getHeight()/2) - 25);
 		//ball.setDx(-10);
 		batch = new SpriteBatch();
 		playerScore = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
@@ -353,8 +355,13 @@ public class GyroscopePong implements Screen {
 		AI.draw();
 		ball.draw();
 		batch.begin();
-		playerScore.draw(batch, playerOne.getScore(), 600, 175);
-		AIScore.draw(batch, AI.getScore(), 1600, 175);
+		//(Gdx.graphics.getWidth()/2) + 500,(Gdx.graphics.getHeight()/2) - 400
+		//playerScore.draw(batch, playerOne.getScore(), 600, 175);
+		//AIScore.draw(batch, AI.getScore(), 1600, 175);
+
+		playerScore.draw(batch, playerOne.getScore(), (Gdx.graphics.getWidth()/2) - (Gdx.graphics.getWidth()/4), 175);
+		AIScore.draw(batch, AI.getScore(), (Gdx.graphics.getWidth()/2) + (Gdx.graphics.getWidth()/4), 175);
+
 		batch.end();
 		playerOne.moveBy(pitch);
 

@@ -6,7 +6,7 @@ This is an Android app that is a twist on the classic game, Pong. The user moves
 - line divider down the middle?
 - sound effect?
 - AI vs AI on main screen?
-- use getWidth and getHeight in game and end screen
+- make speed a function of screen size?
 - bug test game
 - clean game code
 - possibly reuse fonts and buttons via MainClass
