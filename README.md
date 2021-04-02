@@ -3,7 +3,6 @@
 This is an Android app that is a twist on the classic game, Pong. The user moves their paddle by turning their phone.
 
 ## to do
-- allow user to enter initials
 - line divider down the middle?
 - sound effect?
 - AI vs AI on main screen?
@@ -48,3 +47,12 @@ https://stackoverflow.com/questions/37283273/libgdx-filehandle-reading-and-writi
 
 ###### How to center things in libGDX
 https://stackoverflow.com/questions/12449229/centering-a-texture-libgdx
+
+###### How to allow user to enter text in libGDX
+https://stackoverflow.com/questions/32788428/libgdx-textfield-show-keyboard-input-field
+
+###### How to listen for events in text box
+https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/scenes/scene2d/ui/TextField.html
+
+###### How to change font size in text box
+https://stackoverflow.com/questions/44466842/libgdx-textfield-how-to-set-font-size/44466936

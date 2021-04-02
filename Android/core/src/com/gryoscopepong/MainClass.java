@@ -23,15 +23,16 @@ public class MainClass extends Game implements ApplicationListener {
     private LeaderboardScreen leaderboardScreen;
     private RulesScreen rulesScreen;
     private MainScreen mainScreen;
+    private ScoreEntry scoreEntry;
 
 
-    void setGyroscopePong(){
-        game = new GyroscopePong(this);
+    void setGyroscopePong(Stage s){
+        game = new GyroscopePong(this, s);
         setScreen(game);
     }
 
-    void setLeaderboardScreen(int score){
-        leaderboardScreen = new LeaderboardScreen(this, score);
+    void setLeaderboardScreen(){
+        leaderboardScreen = new LeaderboardScreen(this);
         setScreen(leaderboardScreen);
     }
 
@@ -43,6 +44,11 @@ public class MainClass extends Game implements ApplicationListener {
     void setMainScreen(){
         mainScreen = new MainScreen(this);
         setScreen(mainScreen);
+    }
+
+    void setScoreEntry(int score, Stage stage){
+        scoreEntry = new ScoreEntry(this, score, stage);
+        setScreen(scoreEntry);
     }
 
 

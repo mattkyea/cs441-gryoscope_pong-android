@@ -2,11 +2,15 @@ package com.gryoscopepong;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.loaders.AssetLoader;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -26,6 +30,7 @@ public class LeaderboardScreen implements Screen {
     private String[] scores;
     private ArrayList<Score> scoresToPrint = new ArrayList<>();
     private int entries;
+    private Stage stage;
 
 
     public class Score{
@@ -44,7 +49,7 @@ public class LeaderboardScreen implements Screen {
     }
 
 
-    public LeaderboardScreen(MainClass ms, int score){
+    public LeaderboardScreen(MainClass ms){
         mainScreen = ms;
         batch = new SpriteBatch();
         font = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
@@ -55,12 +60,14 @@ public class LeaderboardScreen implements Screen {
         scoreFont.getData().setScale(-2, 2);//negative  to mirror/flip
         scoreFont.setColor(Color.WHITE);
 
+
+        /*
         //somehow allow user to enter initials
-        String initials = "MAK";
+
+
+         */
 
         FileHandle input = Gdx.files.local("scores.txt");
-        input.writeString(initials + " : " + score + ";", true);
-
         String contents = input.readString();
         scores = contents.split(";");
         int min = 0;
@@ -101,6 +108,7 @@ public class LeaderboardScreen implements Screen {
             currY+=100;
         }
         batch.end();
+
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Align;
 
 import java.io.FileInputStream;
@@ -23,11 +24,13 @@ public class GyroscopePong implements Screen {
 	Ball ball;
 	BitmapFont playerScore, AIScore;
 	SpriteBatch batch;
+	Stage stage;
 
 	private MainClass mainScreen;
 
-	public GyroscopePong(MainClass ms){
+	public GyroscopePong(MainClass ms, Stage s){
 		mainScreen = ms;
+		stage = s;
 		System.out.println("oh hello");
 
 		create();
@@ -221,7 +224,8 @@ public class GyroscopePong implements Screen {
 				if(AI.score == 3){
 					System.out.println("game over");
 					dispose();
-					mainScreen.setLeaderboardScreen(playerOne.score);
+					stage.clear();
+					mainScreen.setScoreEntry(playerOne.score, stage);
 				}
 				return true;
 			}
