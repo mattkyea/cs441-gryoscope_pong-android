@@ -4,8 +4,7 @@ This is an Android app that is a twist on the classic game, Pong. The user moves
 
 ## to do
 - line divider down the middle?
-- sound effect?
-- AI vs AI on main screen?
+- AI vs AI on main screen? (would have to clean code first)
 - make speed a function of screen size?
 - bug test game
 - clean game code
@@ -56,3 +55,6 @@ https://libgdx.badlogicgames.com/ci/nightlies/docs/api/com/badlogic/gdx/scenes/s
 
 ###### How to change font size in text box
 https://stackoverflow.com/questions/44466842/libgdx-textfield-how-to-set-font-size/44466936
+
+###### How to add sounds
+https://www.codeproject.com/Questions/1191177/How-to-play-sound-in-gdx

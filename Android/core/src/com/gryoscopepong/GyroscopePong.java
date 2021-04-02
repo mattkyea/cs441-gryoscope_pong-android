@@ -3,6 +3,7 @@ package com.gryoscopepong;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,6 +26,7 @@ public class GyroscopePong implements Screen {
 	BitmapFont playerScore, AIScore;
 	SpriteBatch batch;
 	Stage stage;
+	private Sound ballHit;
 
 	private MainClass mainScreen;
 
@@ -275,6 +277,7 @@ public class GyroscopePong implements Screen {
 			if(this.x >= p1[0] && this.x <= p1[2] && this.y >= p1[1] && this.y <= p1[3]){//player hits, tell AI to get ready for response
 				ball.calculateNewDY(p1[1] + 100);
 				AI.prepareForVolley();
+				ballHit.play(1f);
 				return true;
 			}
 
@@ -283,6 +286,7 @@ public class GyroscopePong implements Screen {
 			//System.out.println("paddle - X: " + p2[0] + " range: "+ p2[2]+ " Y: " + p2[1] + " range: " + p2[3]);
 			if(this.x+50 <= p2[2] && this.x+50 >= p2[0] && this.y >= p2[1] && this.y <= p2[3]){
 				ball.calculateNewDY(p2[1] + 100);
+				ballHit.play(1f);
 				return true;
 			}
 
@@ -292,7 +296,10 @@ public class GyroscopePong implements Screen {
 		}
 
 		public boolean hitScreen(){
-			if(this.y <= 0 || this.y >= Gdx.graphics.getHeight()) return true;
+			if(this.y <= 0 || this.y >= Gdx.graphics.getHeight()) {
+				ballHit.play(1f);
+				return true;
+			}
 			return false;
 		}
 
@@ -328,6 +335,7 @@ public class GyroscopePong implements Screen {
 	
 	//@Override
 	public void create () {
+		ballHit = Gdx.audio.newSound(Gdx.files.internal("blip.wav"));
 		//AI = new Paddle(2000,400);
 		AI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125);
 		playerOne = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125);
