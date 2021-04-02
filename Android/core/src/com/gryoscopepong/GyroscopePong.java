@@ -21,32 +21,113 @@ import java.io.FileInputStream;
 import javax.crypto.spec.PSource;
 
 public class GyroscopePong implements Screen {
-	Paddle playerOne, AI;
-	Ball ball;
+	//Paddle playerOne, AI;
+	//Ball ball;
 	BitmapFont playerScore, AIScore;
 	SpriteBatch batch;
 	Stage stage;
 	private Sound ballHit;
+	private Game game;
 
 	private MainClass mainScreen;
 
 	public GyroscopePong(MainClass ms, Stage s){
 		mainScreen = ms;
 		stage = s;
-		System.out.println("oh hello");
-
 		create();
-/*
-		while(true){
-			render(0);
-			show();
-		}
-
-		 */
 	}
 
 
 	public class T extends SpriteBatch{
+
+	}
+
+	public class Game {
+
+		private Paddle leftSide, rightSide;
+		private Ball ball;
+
+		public Game(Paddle leftSide, Paddle rightSide, Ball ball){
+			this.leftSide = leftSide;
+			this.rightSide = rightSide;
+			this.ball = ball;
+		}
+
+		public boolean collision(){
+			int[] p1, p2;
+			p1 = rightSide.getLocation();
+			//int topRight = this.x - 10 ;
+			//int topLeft = this.x + 10;
+			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
+			//System.out.println("paddle - X: " + p1[0] + " range: "+ p1[2]+ " Y: " + p1[1] + " range: " + p1[3]);
+			if(ball.x >= p1[0] && ball.x <= p1[2] && ball.y >= p1[1] && ball.y <= p1[3]){//player hits, tell AI to get ready for response
+				ball.calculateNewDY(p1[1] + 100);
+				leftSide.prepareForVolley(ball);
+				ballHit.play(1f);
+				ball.setDx(ball.dx * -1);
+				return true;
+			}
+
+			p2 = leftSide.getLocation();
+			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
+			//System.out.println("paddle - X: " + p2[0] + " range: "+ p2[2]+ " Y: " + p2[1] + " range: " + p2[3]);
+			if(ball.x+50 <= p2[2] && ball.x+50 >= p2[0] && ball.y >= p2[1] && ball.y <= p2[3]){
+				ball.calculateNewDY(p2[1] + 100);
+				ballHit.play(1f);
+				ball.setDx(ball.dx * -1);
+				return true;
+			}
+
+
+			return false;
+
+		}
+
+		//TODO move this to Game class
+		private boolean leftScores() {
+			int[] p1 = rightSide.getLocation();
+			//System.out.println(this.x + " VS " + p1[0]);
+			if(ball.x < p1[0]) {
+				leftSide.score+=1;
+				if(leftSide.score == 3){
+					System.out.println("game over");
+					dispose();
+					stage.clear();
+					mainScreen.setScoreEntry(rightSide.score, stage);
+				}
+				return true;
+			}
+			return false;
+		}
+
+		//TODO move this to Game class
+		private boolean rightScores() {
+			int[] p2 = leftSide.getLocation();
+			if(ball.x+50 > p2[2]){
+				rightSide.score+=1;
+				return true;
+			}
+			return false;
+		}
+
+		private void play(){
+			//TODO move this to Game class
+
+			leftSide.draw();
+			rightSide.draw();
+			ball.draw();
+
+			collision();
+			ball.hitScreen();
+			if(leftScores() || rightScores()){
+				//System.out.println("GOAL");
+				ball.reset();
+				rightSide.reset();
+				leftSide.reset();
+			}
+		}
+
+
 
 	}
 
@@ -115,7 +196,7 @@ public class GyroscopePong implements Screen {
 			y = originalY;
 		}
 
-		public void prepareForVolley(){
+		public void prepareForVolley(Ball ball){
 
 			//this works for very small values of DY
 			//i.e. values that don't send the ball off screen
@@ -190,59 +271,12 @@ public class GyroscopePong implements Screen {
 			s.begin(ShapeRenderer.ShapeType.Filled);
 			s.rect(x, y, 50, 50);
 			s.end();
-
-			if(collision()){
-				//System.out.println("\n\n\n\nCOLLIDE\n\n\n\n");
-				setDx(this.dx * -1);
-			}
-
-			if(hitScreen()){
-				setDy(-dy);
-			}
-
-			if(aiScores()){
-				//System.out.println("GOAL");
-				reset();
-				playerOne.reset();
-				AI.reset();
-			}
-
-			if(playerScores()){
-				//System.out.println("GOAL");
-				reset();
-				playerOne.reset();
-				AI.reset();
-			}
-
 			x += dx;
 			y += dy;
 
 		}
 
-		private boolean aiScores() {
-			int[] p1 = playerOne.getLocation();
-			//System.out.println(this.x + " VS " + p1[0]);
-			if(this.x < p1[0]) {
-				AI.score+=1;
-				if(AI.score == 3){
-					System.out.println("game over");
-					dispose();
-					stage.clear();
-					mainScreen.setScoreEntry(playerOne.score, stage);
-				}
-				return true;
-			}
-			return false;
-		}
 
-		private boolean playerScores() {
-			int[] p2 = AI.getLocation();
-			if(this.x+50 > p2[2]){
-				playerOne.score+=1;
-				return true;
-			}
-			return false;
-		}
 
 		public void calculateNewDY(float midpointOfPaddle){
 			int sign = 1;
@@ -267,37 +301,13 @@ public class GyroscopePong implements Screen {
 			System.out.println(((distanceFromCenter/125) * 10) + ", so set dy to " + this.dy);
 		}
 
-		public boolean collision(){
-			int[] p1, p2;
-			p1 = playerOne.getLocation();
-			//int topRight = this.x - 10 ;
-			//int topLeft = this.x + 10;
-			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
-			//System.out.println("paddle - X: " + p1[0] + " range: "+ p1[2]+ " Y: " + p1[1] + " range: " + p1[3]);
-			if(this.x >= p1[0] && this.x <= p1[2] && this.y >= p1[1] && this.y <= p1[3]){//player hits, tell AI to get ready for response
-				ball.calculateNewDY(p1[1] + 100);
-				AI.prepareForVolley();
-				ballHit.play(1f);
-				return true;
-			}
-
-			p2 = AI.getLocation();
-			//System.out.println("ball - X: " + this.x + " Y: " + this.y);
-			//System.out.println("paddle - X: " + p2[0] + " range: "+ p2[2]+ " Y: " + p2[1] + " range: " + p2[3]);
-			if(this.x+50 <= p2[2] && this.x+50 >= p2[0] && this.y >= p2[1] && this.y <= p2[3]){
-				ball.calculateNewDY(p2[1] + 100);
-				ballHit.play(1f);
-				return true;
-			}
 
 
-			return false;
-
-		}
 
 		public boolean hitScreen(){
 			if(this.y <= 0 || this.y >= Gdx.graphics.getHeight()) {
 				ballHit.play(1f);
+				setDy(-dy);
 				return true;
 			}
 			return false;
@@ -337,9 +347,12 @@ public class GyroscopePong implements Screen {
 	public void create () {
 		ballHit = Gdx.audio.newSound(Gdx.files.internal("blip.wav"));
 		//AI = new Paddle(2000,400);
-		AI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125);
-		playerOne = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125);
-		ball = new Ball((Gdx.graphics.getWidth()/2)  - 25,(Gdx.graphics.getHeight()/2) - 25);
+		Paddle AI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125);
+		Paddle playerOne = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125);
+		Ball ball = new Ball((Gdx.graphics.getWidth()/2)  - 25,(Gdx.graphics.getHeight()/2) - 25);
+
+		game = new Game(AI, playerOne, ball);
+
 		//ball.setDx(-10);
 		batch = new SpriteBatch();
 		playerScore = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
@@ -359,19 +372,24 @@ public class GyroscopePong implements Screen {
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);//black
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		/*
 		playerOne.draw();
 		AI.draw();
 		ball.draw();
+		*/
 		batch.begin();
+
 		//(Gdx.graphics.getWidth()/2) + 500,(Gdx.graphics.getHeight()/2) - 400
 		//playerScore.draw(batch, playerOne.getScore(), 600, 175);
 		//AIScore.draw(batch, AI.getScore(), 1600, 175);
 
-		playerScore.draw(batch, playerOne.getScore(), (Gdx.graphics.getWidth()/2) - (Gdx.graphics.getWidth()/4), 175);
-		AIScore.draw(batch, AI.getScore(), (Gdx.graphics.getWidth()/2) + (Gdx.graphics.getWidth()/4), 175);
+		playerScore.draw(batch, game.rightSide.getScore(), (Gdx.graphics.getWidth()/2) - (Gdx.graphics.getWidth()/4), 175);
+		//playerScore.draw(batch, "10", (Gdx.graphics.getWidth()/2) - (Gdx.graphics.getWidth()/4), 175);
+		AIScore.draw(batch, game.leftSide.getScore(), (Gdx.graphics.getWidth()/2) + (Gdx.graphics.getWidth()/4), 175);
 
 		batch.end();
-		playerOne.moveBy(pitch);
+		game.play();
+		game.rightSide.moveBy(pitch);
 
 
 		//if(pitch > 0) playerOne.moveUp();
@@ -420,9 +438,6 @@ public class GyroscopePong implements Screen {
 
 	@Override
 	public void dispose () {
-		playerOne.s.dispose();
-		AI.s.dispose();
-		ball.s.dispose();
 		batch.dispose();
 		playerScore.dispose();
 		AIScore.dispose();
