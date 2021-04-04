@@ -2,6 +2,7 @@ package com.gryoscopepong;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -20,6 +21,7 @@ public class MainScreen implements Screen {
     private Stage stage;//what we interact with on screen
     private BitmapFont font;
     private SpriteBatch batch;
+    private Game game;
 
     public MainScreen(MainClass mc) {
         System.out.println("in main screen");
@@ -77,6 +79,15 @@ public class MainScreen implements Screen {
         stage.addActor(instructionsButton);
         //render(1);
 
+
+        Sound ballHit = Gdx.audio.newSound(Gdx.files.internal("blip.wav"));
+        //AI = new Paddle(2000,400);
+        Paddle AI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125, true, 3);
+        Paddle playerOne = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125, true, 3);
+        Ball ball = new Ball((Gdx.graphics.getWidth()/2)  - 25,(Gdx.graphics.getHeight()/2) - 25, -10, -1);
+
+        game = new Game(AI, playerOne, ball, ballHit);
+
     }
 
 
@@ -95,6 +106,7 @@ public class MainScreen implements Screen {
         batch.begin();
         font.draw(batch, "Gyroscope Pong", (Gdx.graphics.getWidth()/2) + 700, (Gdx.graphics.getHeight()/2) -350);
         batch.end();
+        game.play();
     }
 
     @Override
