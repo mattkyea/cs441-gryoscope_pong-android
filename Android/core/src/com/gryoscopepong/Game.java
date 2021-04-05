@@ -13,7 +13,7 @@ public class Game {
     private Ball ball;
     private Sound ballHit;
 
-    //getters for the variables
+    //getters for the variables we need
     public Paddle getLeftSide() {
         return leftSide;
     }
@@ -22,13 +22,6 @@ public class Game {
         return rightSide;
     }
 
-    public Ball getBall() {
-        return ball;
-    }
-
-    public Sound getBallHit() {
-        return ballHit;
-    }
 
     //constructor for paddles, ball, sound effect
     public Game(Paddle leftSide, Paddle rightSide, Ball ball, Sound soundEffect){
@@ -44,17 +37,19 @@ public class Game {
         int[] p1, p2;
         p1 = rightSide.getLocation();
         p2 = leftSide.getLocation();
-        if(ball.x >= p1[0] && ball.x <= p1[2] && ball.y >= p1[1] && ball.y <= p1[3]){//right side hits, tell left side to get ready for response
+        //right side of ball will hit left side of paddle
+        if(ball.getX() >= p1[0] && ball.getX() <= p1[2] && ball.getY() >= p1[1] && ball.getY() <= p1[3]){//right side hits, tell left side to get ready for response
             ball.calculateNewDY(p1[1] + 100);//calculate angle of ball
-            ball.setDx(ball.dx * -1);//send ball back in opposite direction
-            if(leftSide.isAI) leftSide.prepareForVolley(ball, "left");//move left paddle
+            ball.setDx(ball.getDx() * -1);//send ball back in opposite direction
+            if(leftSide.getIsAI()) ((AIPaddle) leftSide).prepareForVolley(ball);
             ballHit.play(1f);//play sound
             return true;
         }
-        else if(ball.x+50 <= p2[2] && ball.x+50 >= p2[0] && ball.y >= p2[1] && ball.y <= p2[3]){//left side hits, tell right side to get ready for response
+        //left side of ball (thus the +50) will hit right side of paddle
+        else if(ball.getX()+50 >= p2[0] && ball.getX()+50 <= p2[2] &&  ball.getY() >= p2[1] && ball.getY() <= p2[3]){//left side hits, tell right side to get ready for response
             ball.calculateNewDY(p2[1] + 100);//calculate angle of ball
-            ball.setDx(ball.dx * -1);//send ball back in opposite direction
-            if(rightSide.isAI) rightSide.prepareForVolley(ball, "right");//move left paddle
+            ball.setDx(ball.getDx() * -1);//send ball back in opposite direction
+            if(rightSide.getIsAI()) ((AIPaddle) rightSide).prepareForVolley(ball);//move left paddle
             ballHit.play(1f);//play sound
             return true;
         }
@@ -64,8 +59,8 @@ public class Game {
     //check if left scores, and increase score of left side if so
     private boolean leftScores() {
         int[] p1 = rightSide.getLocation();
-        if(ball.x < p1[0]) {
-            leftSide.score+=1;
+        if(ball.getX() < p1[0]) {
+            leftSide.incrementScore();//leftSide.getScore()+=1;
             return true;
         }
         return false;
@@ -74,8 +69,8 @@ public class Game {
     //check if right scores, and increase score of right side if so
     private boolean rightScores() {
         int[] p2 = leftSide.getLocation();
-        if(ball.x+50 > p2[2]){
-            rightSide.score+=1;
+        if(ball.getX()+50 > p2[2]){
+            rightSide.incrementScore();
             return true;
         }
         return false;
@@ -83,9 +78,9 @@ public class Game {
 
     //check if the ball hits the screen, and bounce it off if so
     private boolean hitScreen(){
-        if(ball.y <= 0 || ball.y >= Gdx.graphics.getHeight()) {
+        if(ball.getY() <= 0 || ball.getY() >= Gdx.graphics.getHeight()) {
             ballHit.play(1f);//play sound effect
-            ball.setDy(- this.ball.dy);//send back off screen at opposite angle
+            ball.setDy(- this.ball.getDy());//send back off screen at opposite angle
             return true;
         }
         return false;
@@ -111,8 +106,8 @@ public class Game {
     //if the side that will receive the ball is an AI, tell them to prepare for volley
     //this is used at start of game and after scoring
     private void newServe(){
-        if(ball.dx < 0 && rightSide.isAI) rightSide.prepareForVolley(ball, "right");
-        else if(ball.dy > 0 && leftSide.isAI) leftSide.prepareForVolley(ball, "left");
+        if(ball.getDx() < 0 && rightSide.getIsAI()) ((AIPaddle)rightSide).prepareForVolley(ball);
+        else if(ball.getDx() > 0 &&  leftSide.getIsAI()) ((AIPaddle)leftSide).prepareForVolley(ball);
     }
 
 

@@ -31,12 +31,14 @@ public class GyroscopePong implements Screen {
 	public GyroscopePong(MainClass ms, Stage s){
 		mainScreen = ms;
 		stage = s;
+		//sound, paddles, ball, game
 		Sound ballHit = Gdx.audio.newSound(Gdx.files.internal("blip.wav"));
-		Paddle AI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125, true, 2);
-		Paddle playerOne = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125, false, 0);
+		AIPaddle AI = new AIPaddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125, 1, Paddle.SIDE.LEFT);
+		UserPaddle playerOne = new UserPaddle(0,(Gdx.graphics.getHeight()/2) - 125,  Paddle.SIDE.RIGHT);
 		Ball ball = new Ball((Gdx.graphics.getWidth()/2)  - 25,(Gdx.graphics.getHeight()/2) - 25, -10, 0);
 		game = new Game(AI, playerOne, ball, ballHit);
 
+		//2 fonts, one for each score
 		batch = new SpriteBatch();
 		playerScore = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
 		playerScore.getData().setScale(-5, 5);//negative  to mirror/flip
@@ -49,24 +51,23 @@ public class GyroscopePong implements Screen {
 
 	@Override
 	public void render(float delta) {
-		float pitch = Gdx.input.getPitch();
-		//this gets Z-rotation
-		//it starts at 0, tilting up goes to 90, tilting down goes to -90
 		Gdx.gl.glClearColor(0, 0, 0, 1);//black
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		//draw scores
 		batch.begin();
-		playerScore.draw(batch, game.getRightSide().getScore(), (Gdx.graphics.getWidth()/2) - (Gdx.graphics.getWidth()/4), 175);
-		AIScore.draw(batch, game.getLeftSide().getScore(), (Gdx.graphics.getWidth()/2) + (Gdx.graphics.getWidth()/4), 175);
+		playerScore.draw(batch, game.getRightSide().getScoreAsString(), (Gdx.graphics.getWidth()/2) - (Gdx.graphics.getWidth()/4), 175);
+		AIScore.draw(batch, game.getLeftSide().getScoreAsString(), (Gdx.graphics.getWidth()/2) + (Gdx.graphics.getWidth()/4), 175);
 		batch.end();
+		//play game
 		game.play();
-		game.getRightSide().moveBy(pitch);
-		if(game.getLeftSide().score == 3){
-			System.out.println("game over");
+		//check if AI has scored 3 times
+		if(game.getLeftSide().getScore() == 3){
 			stage.clear();
-			mainScreen.setScoreEntry(game.getRightSide().score, stage);
+			mainScreen.setScoreEntry(game.getRightSide().getScore(), stage);
 		}
 	}
 
+	//necessary functions for implementing Screen
 	@Override
 	public void show() {
 	}

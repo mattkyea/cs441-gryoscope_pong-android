@@ -85,8 +85,8 @@ public class MainScreen implements Screen {
         //set up AI vs AI game
         Sound ballHit = Gdx.audio.newSound(Gdx.files.internal("blip.wav"));//sound effect
         //2 paddles
-        Paddle leftAI = new Paddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125, true, 3);
-        Paddle rightAI = new Paddle(0,(Gdx.graphics.getHeight()/2) - 125, true, 3);
+        AIPaddle leftAI = new AIPaddle((Gdx.graphics.getWidth()) - 50, (Gdx.graphics.getHeight()/2) - 125 , 3, Paddle.SIDE.LEFT);
+        AIPaddle rightAI = new AIPaddle(0,(Gdx.graphics.getHeight()/2) - 125, 3,  Paddle.SIDE.RIGHT);
         //the ball, which is moving up and to the right (up because it creates an interesting game, head on would have no effect)
         Ball ball = new Ball((Gdx.graphics.getWidth()/2)  - 25,(Gdx.graphics.getHeight()/2) - 25, -10, -1);
         game = new Game(leftAI, rightAI, ball, ballHit);//set up the game

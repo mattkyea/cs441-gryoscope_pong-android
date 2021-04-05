@@ -7,12 +7,28 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
  This is the class for the Ball object used for a Game.
  */
 public class Ball {
-
     //fields
-    int x, y;//position
-    int dy, dx;//change in x, change in y, per render
-    int originalX, originalY, originalDX, originalDY; //original values, used to reset
-    ShapeRenderer s;
+    private int x, y;//position
+    private int dy, dx;//change in x, change in y, per render
+    private int originalX, originalY, originalDX, originalDY; //original values, used to reset
+    private ShapeRenderer s;
+
+    //getters
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getDy() {
+        return dy;
+    }
+
+    public int getDx() {
+        return dx;
+    }
 
     //need a position and "speed"/movement to create
     Ball(int x, int y, int dx, int dy){

@@ -3,12 +3,6 @@
 This is an Android app that is a twist on the classic game, Pong. The user moves their paddle by turning their phone.
 
 ## to do
-- AIPaddle class that inherits from Paddle?
-- fix prepareForVolley, it shouldn't use ball, need left vs right, maybe put in game
-- you should probably use move by pitch in game class as well
-- clean and comment game code
-- possibly reuse fonts and buttons via MainClass
-- make speed a function of screen size?
 - bug test game
 
 # Sources
