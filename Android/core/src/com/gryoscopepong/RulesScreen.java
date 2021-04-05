@@ -62,10 +62,6 @@ public class RulesScreen implements Screen {
 
     }
 
-    @Override
-    public void show() {
-
-    }
 
     @Override
     public void render(float delta) {
@@ -85,6 +81,11 @@ public class RulesScreen implements Screen {
         stage.draw();
     }
 
+
+    @Override
+    public void show() {
+
+    }
     @Override
     public void resize(int width, int height) {
 

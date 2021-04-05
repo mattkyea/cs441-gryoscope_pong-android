@@ -3,22 +3,28 @@ package com.gryoscopepong;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+/*
+ This is the class for a Paddle, used for a Pong game. There are 2 paddles per game,
+ and at least one is always an AI.
+ */
 public class Paddle {
-    int x, y;
-    int originalX, originalY;
-    int speed;
-    int dy;
-    int moveTo = 0;
-    boolean moving = false;
-    boolean isAI = false;
-    ShapeRenderer s;
-    int score;
+    int x, y;//position on screen
+    int originalX, originalY;//used to reset
+    ShapeRenderer s;//used to draw
+    int score;//keep track of score
 
+    //the following values will only be used if a Paddle is an AI
+    boolean isAI = false;
+    int speed;//speed to move around screen at
+    int dy;//used to move at speed
+    int moveTo = 0;//position we're moving towards
+    boolean moving = false;//are we moving?
+
+
+    //paddle takes in position, if its an AI, and a speed (only used if its an AI)
     Paddle(int x, int y, boolean isAI, int speed){
-        this.x = x;
-        this.y = y;
-        this.originalX = x;
-        this.originalY = y;
+        this.x = this.originalX = x;
+        this.y = this.originalY = y;
         this.speed = speed;
         this.score = 0;
         this.isAI = isAI;
@@ -26,6 +32,7 @@ public class Paddle {
         s.setColor(1,1,1,1);//white
     }
 
+    //return score as a String so I can print
     public String getScore(){
         return Integer.toString(this.score);
     }
@@ -37,24 +44,8 @@ public class Paddle {
         s.end();
     }
 
-    public void moveTowards(){
-        if(moving){
-            this.y = this.y + this.dy;
-            //System.out.println((this.y + 125) + " >= " + moveTo + " >= " + (this.y - 125));
-            if(this.y + 75 >= moveTo && this.y - 75 <= moveTo) moving = false;
-        }
-    }
-
-    public void moveUp(){
-        y+=1;
-    }
-
-    public void moveDown(){
-        y-=1;
-    }
 
     public void moveBy(float val){
-        //System.out.println(y);
         int newPosition = (int) ((y) + ((val/90) * 25));
         if(newPosition > 0 && newPosition < (Gdx.graphics.getHeight()) - 250) y = newPosition;
     }
@@ -64,31 +55,20 @@ public class Paddle {
         return ret;
     }
 
+    //reset position back to original values
     public void reset(){
         x = originalX;
         y = originalY;
     }
 
+    //AI functions
+
     public void prepareForVolley(Ball ball, String side){
-
-        //this works for very small values of DY
-        //i.e. values that don't send the ball off screen
-        //so that's the real challenge - how to compute on a smaller basis (i.e. I can't do the whole *190 at once), so I can check if we go off screen
-        //loop in worst case scenario -
-        //start at 2, go to 190
-        //at each "toY" and "toX" see if would trigger hit screen
-        //if so, update values here as part of prediction
-
         if(moving) moving = false;
-
-        int toY, toX;
+        int toY = ball.y;
+        int toX = ball.x;
         int ballDXCopy = ball.dx;
         int ballDYCopy = ball.dy;
-        toY = ball.y;
-        toX = ball.x;
-
-        System.out.println(ball.dx);
-
 
         if(side == "left") {
             while (toX < Gdx.graphics.getWidth() - 50) {
@@ -98,36 +78,26 @@ public class Paddle {
             }
         }
         else{
-            System.out.println(toX);
             while (toX > 50) {
                 toY = toY + (ballDYCopy * 1);
                 toX = toX + (ballDXCopy * 1);
-                //System.out.println(toX);
+                System.out.println(toX);
                 if (toY <= 0 || toY >= Gdx.graphics.getHeight()) ballDYCopy *= -1;
             }
-            System.out.println(toX);
         }
-
-
-        //toY = ball.y + (ball.dy * 190);
-        //toX = ball.x + (-ball.dx * 190);
-        //System.out.println("predicted X: " + toX + " predicted Y: " + toY);
-
-        //this jumps the paddle there
-        //will add code to gradually move toward points instead
-        //this.x = toX;//we shouldn't change this - can only move up/down
-        //this.y = toY - 100;//offset paddle size, try to hit in middle
-
-
 
         this.moveTo = toY - 100;
         this.moving = true;
         if(this.moveTo > this.y) this.dy = this.speed * 1;
         if(this.moveTo < this.y) this.dy = this.speed * -1;
-        //this.speed++;
 
+    }
 
-        //how to deal with hitting floor and ceiling?
+    public void moveTowards(){
+        if(moving){
+            this.y = this.y + this.dy;
+            if(this.y + 75 >= moveTo && this.y - 75 <= moveTo) moving = false;
+        }
     }
 
 }
