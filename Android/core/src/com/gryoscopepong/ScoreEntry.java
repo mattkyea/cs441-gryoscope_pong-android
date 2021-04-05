@@ -20,14 +20,18 @@ import com.badlogic.gdx.utils.Align;
 
 import javax.swing.GroupLayout;
 
+/*
+This screen allows the user to enter their initials, so that their score will be added to the scoreboard.
+ */
 public class ScoreEntry implements Screen {
 
-    MainClass mainClass;
-    Stage stage;
-    int score;
-    String initials;
-    private BitmapFont font;
-    SpriteBatch batch;
+    private MainClass mainClass;//singleton
+    private Stage stage;//needed for buttons
+    private int score;//will write to file
+    private String initials;//input from user, will write to file
+    //font and the bitmap needed to draw it
+    private private BitmapFont font;
+    private SpriteBatch batch;
 
 
 
@@ -37,21 +41,24 @@ public class ScoreEntry implements Screen {
         score = sc;
         batch = new SpriteBatch();
 
+        //skin setup, used for textfield and button
         Skin mySkin = new Skin(Gdx.files.internal("skins/plain-james-ui.json"));
+        //set up textfield with font, scale, position, no cursor, etc
         TextField scoreTextField = new TextField("", mySkin);
         scoreTextField.getStyle().font = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
         scoreTextField.getStyle().font.getData().setScale(-2, 2);
-
         scoreTextField.getStyle().cursor = null;
         scoreTextField.setAlignment(Align.center);
         scoreTextField.setPosition((Gdx.graphics.getWidth()/2)-250,Gdx.graphics.getHeight()/2);
         scoreTextField.setSize(500, 150);
 
-
+        //add to stage so textfield will be drawn
         stage.addActor(scoreTextField);
 
+        //only allow 3 characters to be entered
         scoreTextField.setMaxLength(3);
 
+        //event listener for text field - when something is entered, set value to initials
         scoreTextField.setTextFieldListener(new TextField.TextFieldListener() {
             @Override
             public void keyTyped(TextField textField, char c) {
@@ -61,6 +68,7 @@ public class ScoreEntry implements Screen {
 
 
 
+        //setting up enter button at bottom of screen
         TextButton enterButton = new TextButton("Confirm", mySkin);
         enterButton.setTransform(true);
         enterButton.setColor(Color.WHITE);
@@ -69,12 +77,15 @@ public class ScoreEntry implements Screen {
         enterButton.setPosition((Gdx.graphics.getWidth()/2) + 250,(Gdx.graphics.getHeight()/2) + 500);
         enterButton.getLabel().setFontScale(2f);
 
+        //once clicked
         enterButton.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("click");
+                //open the scores.txt internal file
                 FileHandle input = Gdx.files.local("scores.txt");
+                //write the initials and score
                 input.writeString(initials + " : " + score + ";", true);
+                //open the leaderboard screen
                 mainClass.setLeaderboardScreen();
                 return true;
             }
@@ -82,7 +93,7 @@ public class ScoreEntry implements Screen {
 
         stage.addActor(enterButton);
 
-
+        //set up font, which says "enter initials"
         font = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
         font.getData().setScale(-5, 5);//negative  to mirror/flip
         font.setColor(Color.WHITE);
@@ -90,11 +101,8 @@ public class ScoreEntry implements Screen {
 
     }
 
-    @Override
-    public void show() {
 
-    }
-
+    //draw everything on screen
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);//black
@@ -104,6 +112,14 @@ public class ScoreEntry implements Screen {
         batch.begin();
         font.draw(batch, "Enter Initials", (Gdx.graphics.getWidth()/2) + 700,(Gdx.graphics.getHeight()/2) - 400);
         batch.end();
+    }
+
+    //necessary functions for implementing Screen
+
+
+    @Override
+    public void show() {
+
     }
 
     @Override

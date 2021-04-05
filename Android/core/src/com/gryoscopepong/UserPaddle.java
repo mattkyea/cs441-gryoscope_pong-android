@@ -12,6 +12,7 @@ public class UserPaddle extends Paddle{
     }
 
     //draw the paddle
+    //override so we accept user tilt to move paddle
     public void draw(){
         s.begin(ShapeRenderer.ShapeType.Filled);
         s.rect(x, y, 50, 250);

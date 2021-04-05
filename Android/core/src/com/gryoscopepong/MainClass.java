@@ -17,8 +17,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import javax.naming.Context;
 
+/*
+ This is a class I can use to display different screens from any other screen, using a singleton pattern.
+ */
 public class MainClass extends Game implements ApplicationListener {
 
+    //variables for each of our screens
     private GyroscopePong game;
     private LeaderboardScreen leaderboardScreen;
     private RulesScreen rulesScreen;
@@ -26,6 +30,8 @@ public class MainClass extends Game implements ApplicationListener {
     private ScoreEntry scoreEntry;
 
 
+    //functions to set each of our screens as the current screen
+    //some accept additional parameters where necessary
     void setGyroscopePong(Stage s){
         game = new GyroscopePong(this, s);
         setScreen(game);
@@ -52,11 +58,14 @@ public class MainClass extends Game implements ApplicationListener {
     }
 
 
-
+    //execution starts here, instantly open main/start/splash screen
     @Override
     public void create() {
         setMainScreen();
     }
+
+
+    //necessary functions for implementing Screen
 
     @Override
     public void resize(int width, int height) {

@@ -14,6 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/*
+This is the splash screen that first appears when opening the app. It has 2 buttons, play and rules, the title of the
+game, and 2 AIs playing each other.
+ */
 public class MainScreen implements Screen {
 
     private MainClass mainClass;//singleton

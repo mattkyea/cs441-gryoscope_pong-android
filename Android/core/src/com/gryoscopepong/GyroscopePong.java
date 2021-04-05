@@ -20,6 +20,9 @@ import java.io.FileInputStream;
 
 import javax.crypto.spec.PSource;
 
+/*
+ The actual screen displayed during gameplay.
+ */
 public class GyroscopePong implements Screen {
 	BitmapFont playerScore, AIScore;
 	SpriteBatch batch;

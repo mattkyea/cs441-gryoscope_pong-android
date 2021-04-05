@@ -22,18 +22,23 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class LeaderboardScreen implements Screen {
+    //variables
 
-    private MainClass mainScreen;
+    private MainClass mainScreen;//singleton
+    //2 fonts and the batch needed to draw them
     private BitmapFont font;
     private BitmapFont scoreFont;
     private SpriteBatch batch;
+    //variables used to store scores
     private String[] scores;
     private ArrayList<Score> scoresToPrint = new ArrayList<>();
     private int entries;
     private Stage stage;
 
 
+    //nested class representing a score
     public class Score{
+        //made of a int value and string initials
         int value;
         String initials;
 
@@ -52,6 +57,7 @@ public class LeaderboardScreen implements Screen {
     public LeaderboardScreen(MainClass ms){
         mainScreen = ms;
         batch = new SpriteBatch();
+        //set up fonts
         font = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
         font.getData().setScale(-5, 5);//negative  to mirror/flip
         font.setColor(Color.WHITE);
@@ -60,25 +66,20 @@ public class LeaderboardScreen implements Screen {
         scoreFont.getData().setScale(-2, 2);//negative  to mirror/flip
         scoreFont.setColor(Color.WHITE);
 
-
-        /*
-        //somehow allow user to enter initials
-
-
-         */
-
+        //open the file
         FileHandle input = Gdx.files.local("scores.txt");
         String contents = input.readString();
+        //split the contents by ";" (i.e. put each entry as its own element)
         scores = contents.split(";");
-        int min = 0;
-        entries = 0;
+        entries = 0;//keep track of how many we'll print
         for(String s : scores){
             String[] parsingScore;
-            parsingScore = s.split(" : ");
-            Score currScore = new Score(Integer.parseInt(parsingScore[1]), parsingScore[0] );
-            scoresToPrint.add(currScore);
+            parsingScore = s.split(" : "); //split score by initials : value
+            Score currScore = new Score(Integer.parseInt(parsingScore[1]), parsingScore[0] );//parse to make a new Score object
+            scoresToPrint.add(currScore);//and add it to an arraylist
         }
 
+        //then use a custom comparator to sort the values in the Scores
         scoresToPrint.sort(new Comparator<Score>() {
             @Override
             public int compare(Score s1, Score s2) {
@@ -86,17 +87,14 @@ public class LeaderboardScreen implements Screen {
             }
         });
 
-        //System.out.println(entries);
+        //and print either the top 6 or all entries if there's less than 6
         if(scoresToPrint.size() >= 6) entries = 6;
         else entries = scoresToPrint.size();
     }
 
 
-    @Override
-    public void show() {
 
-    }
-
+    //draw everything on screen
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);//black
@@ -104,11 +102,18 @@ public class LeaderboardScreen implements Screen {
         batch.begin();
         font.draw(batch, "game over", (Gdx.graphics.getWidth()/2) + 500,(Gdx.graphics.getHeight()/2) - 400);
         int currY = (Gdx.graphics.getHeight()/2) - 150;
-        for(int i=0; i < entries; i++){
+        for(int i=0; i < entries; i++){//loop though entries to print each one below the last
             scoreFont.draw(batch, scoresToPrint.get(i).toString(), (Gdx.graphics.getWidth()/2)+150, currY);
             currY+=100;
         }
         batch.end();
+
+    }
+
+    //necessary functions for implementing Screen
+
+    @Override
+    public void show() {
 
     }
 

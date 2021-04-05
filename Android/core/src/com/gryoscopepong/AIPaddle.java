@@ -20,49 +20,59 @@ public class AIPaddle extends Paddle{
         this.isAI = true;
     }
 
+    //when the other paddle hits a ball, we must prepare to hit it back
+    //this works by calculating where the ball will end up
+    //the only thing that stops a perfect AI is its speed - if it can't get to a spot quick enough, it'll miss
     public void prepareForVolley(Ball ball){
         if(moving) moving = false;
+        //get all of the ball's values
         int toY = ball.getY();
         int toX = ball.getX();
         int ballDXCopy = ball.getDx();
         int ballDYCopy = ball.getDy();
 
+        //if this is the left paddle
         if(side == SIDE.LEFT) {
-            while (toX < faceOfPaddle) {
+            while (toX < faceOfPaddle) {//increment X value of ball until its at the X value for the face of the paddle
+                //use dy and dx to increment
                 toY = toY + (ballDYCopy * 1);
                 toX = toX + (ballDXCopy * 1);
-                if (toY <= 0 || toY >= Gdx.graphics.getHeight()) ballDYCopy *= -1;
+                if (toY <= 0 || toY >= Gdx.graphics.getHeight()) ballDYCopy *= -1;//check for hitting walls and adjust
             }
         }
-
-        else if (side == SIDE.RIGHT){
-            while (toX > 50) {
+        //if this is the left paddle
+        else if (side == SIDE.RIGHT){//decrement X value of ball until its at the X value for the face of the paddle
+            while (toX > faceOfPaddle) {
+                //use dy and dx to decrement
                 toY = toY + (ballDYCopy * 1);
                 toX = toX + (ballDXCopy * 1);
-                if (toY <= 0 || toY >= Gdx.graphics.getHeight()) ballDYCopy *= -1;
+                if (toY <= 0 || toY >= Gdx.graphics.getHeight()) ballDYCopy *= -1;//check for hitting walls and adjust
             }
         }
-
-        this.moveTo = toY - 100;
-        this.moving = true;
+        this.moveTo = toY - 100;//offset size of paddle
+        this.moving = true;//allow paddle to start moving
+        //check where to go relative to where we are, so we know to move up or down
         if(this.moveTo > this.y) this.dy = this.speed * 1;
         if(this.moveTo < this.y) this.dy = this.speed * -1;
 
     }
 
+    //move the AI paddle
     public void moveTowards(){
-        if(moving){
-            this.y = this.y + this.dy;
-            if(this.y + 75 >= moveTo && this.y - 75 <= moveTo) moving = false;
+        if(moving){//only if we've prepared for a volley
+            this.y = this.y + this.dy;//increment y by dy
+            if(this.y + 75 >= moveTo && this.y - 75 <= moveTo) moving = false;//once in range of predicted ball position, stop
         }
     }
 
+    //override draw so we can call moveTowards
     @Override
     public void draw(){
         super.draw();
         moveTowards();
     }
 
+    //override draw so we can stop moving
     @Override
     public void reset(){
         super.reset();

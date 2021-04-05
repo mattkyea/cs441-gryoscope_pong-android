@@ -14,9 +14,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+/*
+ Basic screen to display rules.
+ */
 public class RulesScreen implements Screen {
 
-    private MainClass mainScreen;
+    //variables
+    private MainClass mainScreen;//singleton
+    //2 fonts and the batch needed to draw them
     private BitmapFont rulesFont;
     private BitmapFont headerFont;
     private SpriteBatch batch;
@@ -31,6 +36,7 @@ public class RulesScreen implements Screen {
         //found this one along with others at https://github.com/czyzby/gdx-skins
         Skin mySkin = new Skin(Gdx.files.internal("skins/plain-james-ui.json"));
 
+        //set up exit button
         TextButton exitButton = new TextButton("Exit Rules", mySkin);
         exitButton.setTransform(true);
         exitButton.setColor(Color.WHITE);
@@ -39,20 +45,23 @@ public class RulesScreen implements Screen {
         exitButton.setPosition((Gdx.graphics.getWidth()/2) + 250,(Gdx.graphics.getHeight()/2) + 500);
         exitButton.getLabel().setFontScale(2f);
 
+        //on clicking exit button
         exitButton.addListener(new InputListener(){
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("click");
-                mainScreen.setMainScreen();
+                mainScreen.setMainScreen();//send user back to the main screen
                 return true;
             }
         });
 
+        //set up the 2 fonts
         batch = new SpriteBatch();
+        //this one is larger, says "rules"
         headerFont = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
         headerFont.getData().setScale(-5, 5);//negative  to mirror/flip
         headerFont.setColor(Color.WHITE);
 
+        //this one is smaller, lists the rules
         rulesFont = new BitmapFont(Gdx.files.internal("fonts/dot.fnt"), true);
         rulesFont.getData().setScale(-1, 1);//negative  to mirror/flip
         rulesFont.setColor(Color.WHITE);
@@ -69,6 +78,7 @@ public class RulesScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
+        //draw fonts
         headerFont.draw(batch, "Rules:", (Gdx.graphics.getWidth()/2) + 250 , (Gdx.graphics.getHeight()/2) -400);
         rulesFont.draw(batch, "This is a twist on the classic game Pong. \n\n\n" +
                 "\tYour paddle is on the right side, and you are playing against the computer. \n\n\n" +
@@ -77,11 +87,12 @@ public class RulesScreen implements Screen {
                 "The game ends once the AI has scored 3 points.\n\n\n", (Gdx.graphics.getWidth()/2) + 1000, (Gdx.graphics.getHeight()/2) -150);
 
         batch.end();
+        //add stage so button drawn as well
         stage.act();
         stage.draw();
     }
 
-
+    //necessary functions for implementing Screen
     @Override
     public void show() {
 
