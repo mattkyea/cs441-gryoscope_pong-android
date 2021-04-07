@@ -30,7 +30,7 @@ public class ScoreEntry implements Screen {
     private int score;//will write to file
     private String initials;//input from user, will write to file
     //font and the bitmap needed to draw it
-    private private BitmapFont font;
+    private BitmapFont font;
     private SpriteBatch batch;
 
 
