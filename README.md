@@ -2,9 +2,6 @@
 
 This is an Android app that is a twist on the classic game, Pong. The user moves their paddle by turning their phone.
 
-## to do
-- bug test game
-
 # Sources
 
 ###### How to get rotation:
